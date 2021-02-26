@@ -1,46 +1,75 @@
-import { useState, useEffect } from 'react'
-import styles from '../styles/components/Countdown.module.css'
+import { useState, useEffect } from 'react';
+import styles from '../styles/components/Countdown.module.css';
 
+let countdownTimeout: NodeJS.Timeout;
 
-export function Countdown(){
-  const [time,setTime] = useState( 25 * 60 );
-  const [active, setActive] = useState(false)
+export function Countdown() {
+	const [time, setTime] = useState(25 * 60);
+	const [isActive, setisActive] = useState(false);
+	const [hasFinished, setHasFinished] = useState(false);
 
-  const minutes = Math.floor(time / 60)
-  const seconds =  time/ 60
+	const minutes = Math.floor(time / 60);
+	const seconds = time % 60;
 
-  const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('')
-  const [secondLeft, secondRight] = String(seconds).padStart(2, '0').split('')
+	const [minuteLeft, minuteRight] = String(minutes).padStart(2, '0').split('');
+	const [secondLeft, secondRight] = String(seconds).padStart(2, '0').split('');
 
-    function startCountdown(){
-        setActive(true)
-    }
+	function startCountdown() {
+		setisActive(true);
+	}
 
-    useEffect(()=>{
-        if(active && time > 0 ){
-            setTimeout(()=>{
-                setTime(time - 1)
-            }, 1000)
-        }
-    } , [active, time])
+	function resetCountdown() {
+		clearTimeout(countdownTimeout);
+		setisActive(false);
+		setTime(25 * 60);
+	}
 
-    return(
-     <div>
-        <div className={styles.countdownContainer}>
-            <div>
-                <span>{minuteLeft}</span>
-                <span>{minuteRight}</span>
-            </div>
-              <span>:</span>
-            <div>
-                <span>{secondLeft}</span>
-                <span>{secondRight}</span>
-            </div>
-        </div>
+	useEffect(() => {
+		if (isActive && time > 0) {
+			countdownTimeout = setTimeout(() => {
+				setTime(time - 1);
+			}, 1000);
+		} else if (isActive && time === 0) {
+			setHasFinished(true);
+			setisActive(false);
+		}
+	}, [isActive, time]);
 
-        <button type="button" className={styles.countdownButton} onClick={startCountdown}> 
-            Iniciar Novo Ciclo! 
-        </button>
-     </div>
-    )
+	return (
+		<div>
+			<div className={styles.countdownContainer}>
+				<div>
+					<span>{minuteLeft}</span>
+					<span>{minuteRight}</span>
+				</div>
+				<span>:</span>
+				<div>
+					<span>{secondLeft}</span>
+					<span>{secondRight}</span>
+				</div>
+			</div>
+
+			{hasFinished ? (
+				<button disabled className={styles.countdownButton}>
+					Ciclo Encerrado!
+				</button>
+			) : (
+				<>
+					{isActive ? (
+						<button
+							type='button'
+							className={`${styles.countdownButton} ${styles.countdownButtonActive}`}
+							onClick={resetCountdown}
+						>
+							Abandonar Ciclo!
+						</button>
+					) : (
+						<button type='button' className={styles.countdownButton} onClick={startCountdown}>
+							Iniciar Novo Ciclo!
+						</button>
+					)}
+				</>
+			)}
+		</div>
+	);
 }
