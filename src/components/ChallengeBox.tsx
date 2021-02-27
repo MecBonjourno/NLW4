@@ -3,7 +3,7 @@ import { challengeContext } from '../contexts/ChallengeContext';
 import styles from '../styles/components/ChallengeBox.module.css'
 
 export function ChallengeBox() {
-    const contextData = useContext(challengeContext)
+    const {activeChallenge} = useContext(challengeContext)
 
     const hasActiveChallenge = true;
 
