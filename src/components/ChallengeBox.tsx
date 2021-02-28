@@ -12,7 +12,7 @@ export function ChallengeBox() {
         resetCountdown();
     }
 
-    function HandleFain(){
+    function HandleFail(){
         resetChallenge();
         resetCountdown();
     }
@@ -30,8 +30,8 @@ export function ChallengeBox() {
                     </main>
 
                     <footer>
-                        <button type="button" className={styles.challengeButtonFail} onClick={resetChallenge}>Falhei</button>
-                        <button type="button" className={styles.challengeButtonSucess} onClick={completeChallenge}>Completei</button>
+                        <button type="button" className={styles.challengeButtonFail} onClick={HandleFail}>Falhei</button>
+                        <button type="button" className={styles.challengeButtonSucess} onClick={HandleSucess}>Completei</button>
                     </footer>
                 </div>
             ) : (
